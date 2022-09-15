@@ -17,11 +17,6 @@ public class ContatoRepository implements IRepository<Contato> {
     public ContatoRepository() throws DataStorageException {
         cache = new ArrayList<>();
         load();
-        
-        if (cache.isEmpty()) {
-            cache.addAll(TestUtil.randomDataset());
-            save();
-        }
     }
 
     @Override

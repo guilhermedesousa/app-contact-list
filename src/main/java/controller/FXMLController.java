@@ -52,6 +52,18 @@ public class FXMLController {
 
     private ContatoRepository repository;
 
+    public void initialize() {
+        try {
+            repository = new ContatoRepository();
+        } catch (DataStorageException e) {
+            setStatusMessage(e);
+        }
+        listViewContatos.setItems(FXCollections.observableArrayList());
+        populateList();
+        bindEvents();
+        refreshDetailPane();
+    }
+
     private void populateList() {
         listViewContatos.getItems().clear();
 
@@ -83,7 +95,11 @@ public class FXMLController {
             var itemToRemove = listViewContatos.getSelectionModel().getSelectedItem();
 
             try {
-                repository.remove(itemToRemove.getContato());
+                repository.remove(listViewContatos
+                    .getSelectionModel()
+                    .getSelectedItem()
+                    .getContato()
+                );
                 populateList();
                 refreshDetailPane();
             } catch (DataUpdateException e) {
@@ -154,18 +170,6 @@ public class FXMLController {
             buttonUpdate.setVisible(true);
             buttonInsert.setVisible(false);
         }
-    }
-
-    public void initialize() {
-        try {
-            repository = new ContatoRepository();
-        } catch (DataStorageException e) {
-            setStatusMessage(e);
-        }
-        listViewContatos.setItems(FXCollections.observableArrayList());
-        populateList();
-        bindEvents();
-        refreshDetailPane();
     }
 
     private void setStatusMessage(Throwable e) {
